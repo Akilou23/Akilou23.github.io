@@ -2,36 +2,49 @@
 <html>
 <body>
 <h1>Hello World</h1>
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Mon formulaire</title>
+    <title>Formulaire de saisie de texte</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/rss-to-json@1.1.3/dist/rss-to-json.min.js"></script>
   </head>
   <body>
-    <h1>Envoyer un message</h1>
+    <h1>Envoyez votre message</h1>
     <form id="message-form">
-      <label for="content">Contenu :</label>
-      <textarea id="content" name="content" required></textarea>
-      <button type="submit">Envoyer</button>
+      <label for="message-input">Votre message :</label><br>
+      <textarea id="message-input" name="message-input" rows="4" cols="50"></textarea><br>
+      <input type="submit" value="Envoyer">
     </form>
-    <p id="message"></p>
+    <p id="message-status"></p>
     <script>
       const form = document.getElementById('message-form');
+      const messageInput = document.getElementById('message-input');
+      const messageStatus = document.getElementById('message-status');
+
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
-        const content = document.getElementById('content').value;
-        const response = await fetch(' https://flux-e7fbhw93i-akilou23s-projects.vercel.app', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ content })
-        });
-        const message = await response.json();
-        document.getElementById('message').innerText = `Message envoyé : ${message.content}`;
+
+        // Effacer le champ de saisie
+        messageInput.value = '';
+
+        // Afficher un message de confirmation
+        messageStatus.textContent = 'MESSAGE ENVOYÉ';
+
+        // Envoyer le message à l'API
+        try {
+          const response = await axios.post('/api/messages', {
+            message: messageInput.value
+          });
+          console.log(response.data);
+        } catch (error) {
+          console.error(error);
+        }
       });
     </script>
   </body>
 </html>
+
 </body>
 </html>
